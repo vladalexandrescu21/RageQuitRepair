@@ -80,7 +80,7 @@ const CONFIG = {
     };
 
     const render = (idx) => {
-      el.innerHTML = messages[idx];
+      el.innerHTML = '<span class="hero__rotator-inner">' + messages[idx] + '</span>';
       el.classList.remove('is-out');
       setActiveDot(idx);
     };
