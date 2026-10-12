@@ -10,11 +10,11 @@ const CONFIG = {
   // Datele tale de contact. Lasă gol ('') orice canal pe care nu îl folosești
   // și acesta nu va fi afișat pe site.
   contact: [
-    { label: 'WhatsApp',  value: '+40 7xx xxx xxx',       href: 'https://wa.me/407xxxxxxxx',               icon: '💬' },
-    { label: 'Telefon',   value: '+40 7xx xxx xxx',       href: 'tel:+407xxxxxxxx',                        icon: '📞' },
-    { label: 'Instagram', value: '@ragequitrepair',       href: 'https://instagram.com/ragequitrepair',   icon: '📸' },
-    { label: 'TikTok',    value: '@ragequitrepair',       href: 'https://tiktok.com/@ragequitrepair',      icon: '🎵' },
-    { label: 'OLX',       value: 'Vezi anunțul',          href: '#',                                       icon: '🏷️' },
+    { label: 'WhatsApp',  value: '0750 201 768',           href: 'https://wa.me/40750201768',               icon: '💬' },
+    { label: 'Telefon',   value: '0750 201 768',           href: 'tel:+40750201768',                        icon: '📞' },
+    { label: 'Instagram', value: '@ragequitrepair',        href: 'https://instagram.com/ragequitrepair',    icon: '📸' },
+    { label: 'TikTok',    value: '@ragequitrepair',        href: 'https://tiktok.com/@ragequitrepair',      icon: '🎵' },
+    { label: 'OLX',       value: 'Vezi anunțul',           href: '#',                                       icon: '🏷️' },
   ],
 };
 /* ===================================================================
