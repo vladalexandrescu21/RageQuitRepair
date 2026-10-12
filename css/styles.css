@@ -189,10 +189,9 @@ ul, ol { list-style: none; padding: 0; }
 .hero__rotator {
   font-size: clamp(1.05rem, 3.4vw, 1.5rem);
   line-height: 1.45; color: var(--text-dim);
-  max-width: 620px;
+  max-width: 620px; margin: 2px auto 6px;
   min-height: 4.35em;                 /* rezervă spațiu => butoanele nu sar */
-  display: flex; align-items: center; justify-content: center;
-  margin: 2px 0 6px;
+  text-align: center;
   opacity: 1; transform: translateY(0);
   transition: opacity .45s ease, transform .45s ease;
   will-change: opacity, transform;
