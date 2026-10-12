@@ -100,43 +100,71 @@ const CONFIG = {
   /* ---------- Hero: slideshow pe scroll ---------- */
   (function heroScroll() {
     const hero = document.getElementById('hero');
+    const sticky = hero ? hero.querySelector('.hero__sticky') : null;
     const slides = Array.from(document.querySelectorAll('.hero__slide'));
-    if (!hero || !slides.length) return;
+    if (!hero || !sticky || !slides.length) return;
 
     const n = slides.length;
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
-    const render = () => {
-      const rect = hero.getBoundingClientRect();
-      const scrollable = hero.offsetHeight - window.innerHeight;
-      // progres 0 -> 1 pe toată înălțimea secțiunii hero
-      const progress = clamp(-rect.top / scrollable, 0, 1);
+    // Lerp = cât de repede „urmărește” animația poziția de scroll.
+    // Mai mic = mai lin/plutitor; 1 = instant (fără netezire).
+    const EASE = prefersReduced ? 1 : 0.16;
 
-      slides.forEach((slide, i) => {
+    let target = 0;      // progresul-țintă dat de poziția de scroll
+    let current = 0;     // progresul afișat, care alunecă spre țintă
+    let running = false;
+
+    // Măsurăm în pixeli reali (offsetHeight), nu window.innerHeight — astfel
+    // apariția/dispariția barei Safari pe iOS nu mai provoacă salturi.
+    const computeTarget = () => {
+      const scrollable = hero.offsetHeight - sticky.offsetHeight;
+      if (scrollable <= 0) { target = 0; return; }
+      const top = hero.getBoundingClientRect().top;
+      target = clamp(-top / scrollable, 0, 1);
+    };
+
+    const paint = (p) => {
+      for (let i = 0; i < n; i++) {
         const mid = (i + 0.5) / n;
         const span = 1 / n;
-        let opacity = 1 - Math.abs(progress - mid) / (span * 0.72);
+        let opacity = 1 - Math.abs(p - mid) / (span * 0.8);
         opacity = clamp(opacity, 0, 1);
-        // prima rămâne vizibilă la început, ultima la final
-        if (i === 0 && progress < mid) opacity = 1;
-        if (i === n - 1 && progress > mid) opacity = 1;
-
-        slide.style.opacity = opacity.toFixed(3);
-        const shift = (progress - mid) * -42;
-        slide.style.transform = `translateY(${shift.toFixed(1)}px)`;
-      });
+        if (i === 0 && p < mid) opacity = 1;              // prima rămâne la început
+        if (i === n - 1 && p > mid) opacity = 1;          // ultima rămâne la final
+        const shift = (p - mid) * -26;                    // deplasare subtilă
+        const s = slides[i].style;
+        s.opacity = opacity.toFixed(3);
+        s.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`;
+      }
     };
 
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { render(); ticking = false; });
+    const loop = () => {
+      current += (target - current) * EASE;
+      if (Math.abs(target - current) < 0.0004) {
+        current = target;
+        paint(current);
+        running = false;
+        return;
+      }
+      paint(current);
+      requestAnimationFrame(loop);
     };
 
-    render();
+    const kick = () => {
+      if (!running) { running = true; requestAnimationFrame(loop); }
+    };
+
+    const onScroll = () => { computeTarget(); kick(); };
+
+    // Init
+    computeTarget();
+    current = target;
+    paint(current);
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', render);
+    window.addEventListener('resize', onScroll);
+    window.addEventListener('orientationchange', onScroll);
   })();
 
   /* ---------- Reveal la scroll ---------- */
