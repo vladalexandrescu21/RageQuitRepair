@@ -30,26 +30,85 @@ const CONFIG = {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---------- Countdown GTA 6 ---------- */
-  (function gta() {
-    const el = document.getElementById('gta-countdown');
+  /* ---------- Hero: punchline rotativ ---------- */
+  (function heroRotator() {
+    const el = document.getElementById('heroRotator');
+    const dotsWrap = document.getElementById('heroDots');
     if (!el) return;
-    const target = new Date(CONFIG.gta6ReleaseDate + 'T00:00:00');
-    const now = new Date();
-    const msPerDay = 86400000;
-    const days = Math.ceil((target - now) / msPerDay);
 
-    if (isNaN(days)) {
-      el.textContent = 'GTA 6';
-    } else if (days > 1) {
-      el.textContent = `GTA 6 se lansează în ${days} zile`;
-    } else if (days === 1) {
-      el.textContent = 'GTA 6 se lansează mâine';
-    } else if (days === 0) {
-      el.textContent = 'GTA 6 se lansează azi';
-    } else {
-      el.textContent = 'GTA 6 e deja aici';
+    // Fraza GTA 6 cu numărul de zile calculat dinamic
+    const gtaPhrase = (() => {
+      const target = new Date(CONFIG.gta6ReleaseDate + 'T00:00:00');
+      const days = Math.ceil((target - new Date()) / 86400000);
+      if (isNaN(days)) return 'GTA 6 bate la ușă';
+      if (days === 1) return 'GTA 6 se lansează mâine';
+      if (days === 0) return 'GTA 6 se lansează azi';
+      if (days < 0) return 'GTA 6 e deja aici';
+      // „de zile” se folosește când ultimele 2 cifre sunt 0 sau 20–99 (ex: 38 de zile, dar 15 zile)
+      const lastTwo = days % 100;
+      const unit = (lastTwo === 0 || lastTwo >= 20) ? 'de zile' : 'zile';
+      return `GTA 6 se lansează în ${days} ${unit}`;
+    })();
+
+    // Mesajele care se rotesc (HTML controlat de noi — fără input de la user)
+    const messages = [
+      `<span class="g">${gtaPhrase}</span> — și drift-ul nu o să te lase să te bucuri de Vice City.`,
+      `Abia ai început <span class="g">Witcher 3 Remastered</span>… și deja l-ai amețit pe Geralt?`,
+      `Îl reparăm <span class="g">definitiv</span>: module TMR, fără drift, pentru totdeauna.`,
+    ];
+
+    const DURATION = 3800;   // cât stă fiecare mesaj (ms)
+    let i = 0;
+    let timer = null;
+
+    // Construim indicatorul (dots)
+    const dots = [];
+    if (dotsWrap) {
+      messages.forEach((_, idx) => {
+        const b = document.createElement('button');
+        b.className = 'hero__dot' + (idx === 0 ? ' is-active' : '');
+        b.type = 'button';
+        b.setAttribute('aria-label', `Mesajul ${idx + 1}`);
+        b.addEventListener('click', () => show(idx, true));
+        dotsWrap.appendChild(b);
+        dots.push(b);
+      });
     }
+
+    const setActiveDot = (idx) => {
+      dots.forEach((d, k) => d.classList.toggle('is-active', k === idx));
+    };
+
+    const render = (idx) => {
+      el.innerHTML = messages[idx];
+      el.classList.remove('is-out');
+      setActiveDot(idx);
+    };
+
+    // Afișează un mesaj cu fade; `manual` = declanșat de click pe dot
+    const show = (idx, manual) => {
+      if (idx === i && !manual) return;
+      i = idx;
+      el.classList.add('is-out');            // fade out
+      window.setTimeout(() => render(i), prefersReduced ? 150 : 450);
+      if (manual) schedule();                // resetează timer-ul după click
+    };
+
+    const next = () => show((i + 1) % messages.length, false);
+
+    const schedule = () => {
+      if (timer) clearInterval(timer);
+      timer = setInterval(next, DURATION);
+    };
+
+    // Pauză când tab-ul nu e vizibil (economie + sincron corect)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { if (timer) clearInterval(timer); }
+      else schedule();
+    });
+
+    render(0);
+    schedule();
   })();
 
   /* ---------- Contact dinamic ---------- */
@@ -95,76 +154,6 @@ const CONFIG = {
       toggle.setAttribute('aria-label', open ? 'Închide meniul' : 'Deschide meniul');
     });
     menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
-  })();
-
-  /* ---------- Hero: slideshow pe scroll ---------- */
-  (function heroScroll() {
-    const hero = document.getElementById('hero');
-    const sticky = hero ? hero.querySelector('.hero__sticky') : null;
-    const slides = Array.from(document.querySelectorAll('.hero__slide'));
-    if (!hero || !sticky || !slides.length) return;
-
-    const n = slides.length;
-    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-
-    // Lerp = cât de repede „urmărește” animația poziția de scroll.
-    // Mai mic = mai lin/plutitor; 1 = instant (fără netezire).
-    const EASE = prefersReduced ? 1 : 0.16;
-
-    let target = 0;      // progresul-țintă dat de poziția de scroll
-    let current = 0;     // progresul afișat, care alunecă spre țintă
-    let running = false;
-
-    // Măsurăm în pixeli reali (offsetHeight), nu window.innerHeight — astfel
-    // apariția/dispariția barei Safari pe iOS nu mai provoacă salturi.
-    const computeTarget = () => {
-      const scrollable = hero.offsetHeight - sticky.offsetHeight;
-      if (scrollable <= 0) { target = 0; return; }
-      const top = hero.getBoundingClientRect().top;
-      target = clamp(-top / scrollable, 0, 1);
-    };
-
-    const paint = (p) => {
-      for (let i = 0; i < n; i++) {
-        const mid = (i + 0.5) / n;
-        const span = 1 / n;
-        let opacity = 1 - Math.abs(p - mid) / (span * 0.8);
-        opacity = clamp(opacity, 0, 1);
-        if (i === 0 && p < mid) opacity = 1;              // prima rămâne la început
-        if (i === n - 1 && p > mid) opacity = 1;          // ultima rămâne la final
-        const shift = (p - mid) * -26;                    // deplasare subtilă
-        const s = slides[i].style;
-        s.opacity = opacity.toFixed(3);
-        s.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`;
-      }
-    };
-
-    const loop = () => {
-      current += (target - current) * EASE;
-      if (Math.abs(target - current) < 0.0004) {
-        current = target;
-        paint(current);
-        running = false;
-        return;
-      }
-      paint(current);
-      requestAnimationFrame(loop);
-    };
-
-    const kick = () => {
-      if (!running) { running = true; requestAnimationFrame(loop); }
-    };
-
-    const onScroll = () => { computeTarget(); kick(); };
-
-    // Init
-    computeTarget();
-    current = target;
-    paint(current);
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    window.addEventListener('orientationchange', onScroll);
   })();
 
   /* ---------- Reveal la scroll ---------- */
