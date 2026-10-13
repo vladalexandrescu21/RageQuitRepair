@@ -316,6 +316,12 @@ ul, ol { list-style: none; padding: 0; }
 }
 .case__media { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .case__img { margin: 0; }
+.case__img img {
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover;
+  border-radius: var(--radius-sm); border: 1px solid var(--border); display: block;
+  transition: transform .3s ease;
+}
+.case__img a:hover img { transform: scale(1.03); }
 .case__placeholder {
   aspect-ratio: 4 / 3; border-radius: var(--radius-sm);
   background: repeating-linear-gradient(45deg, var(--surface-2), var(--surface-2) 10px, var(--bg-elev) 10px, var(--bg-elev) 20px);
@@ -327,6 +333,7 @@ ul, ol { list-style: none; padding: 0; }
 .case__body h3 { font-size: 1.25rem; margin-bottom: 14px; }
 .case__body p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 10px; }
 .case__body strong { color: var(--text); }
+.case__cta { margin-top: 16px; }
 .case + .muted { margin-top: 16px; }
 
 /* ===================== GALERIE ===================== */

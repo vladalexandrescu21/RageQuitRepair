@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/styles.css?v=6" />
+  <link rel="stylesheet" href="css/styles.css?v=7" />
 </head>
 <body>
   <!-- ===================== NAV ===================== -->
@@ -335,28 +335,32 @@
       <div class="section__head reveal">
         <span class="tag">Reparații rezolvate</span>
         <h2>Nu doar stick drift</h2>
-        <p class="lead">Un exemplu de controller cu o altă problemă, adus înapoi la viață.</p>
+        <p class="lead">Un exemplu real de controller cu o altă problemă, adus înapoi la viață.</p>
       </div>
 
       <article class="case reveal">
         <div class="case__media">
           <figure class="case__img">
-            <div class="case__placeholder">Foto „înainte”</div>
-            <figcaption>Înainte</figcaption>
+            <a href="assets/images/showcase-problema.jpg" target="_blank" rel="noopener">
+              <img src="assets/images/showcase-problema.jpg" alt="Zona cu condensatoarele deteriorate de pe placa controllerului, marcată" loading="lazy" />
+            </a>
+            <figcaption>Zona cu problema</figcaption>
           </figure>
           <figure class="case__img">
-            <div class="case__placeholder">Foto „după”</div>
-            <figcaption>După</figcaption>
+            <a href="assets/images/showcase-reparat.jpg" target="_blank" rel="noopener">
+              <img src="assets/images/showcase-reparat.jpg" alt="Puntea de fludor care a refăcut legătura pe placă" loading="lazy" />
+            </a>
+            <figcaption>După reparație</figcaption>
           </figure>
         </div>
         <div class="case__body">
-          <h3>[Titlu reparație — ex: „Buton L1 care nu mai răspundea”]</h3>
-          <p class="case__problem"><strong>Problema:</strong> [Descrie aici simptomele cu care a venit controllerul.]</p>
-          <p class="case__fix"><strong>Soluția:</strong> [Descrie ce ai găsit și cum ai rezolvat.]</p>
-          <p class="case__result"><strong>Rezultat:</strong> [Cum funcționează acum.]</p>
+          <h3>Controller care se deconecta la câțiva centimetri de PS5</h3>
+          <p class="case__problem"><strong>Problema:</strong> Un client își schimbase singur joystick-urile. Pe cablu totul părea perfect — dar prin Bluetooth controllerul se conecta doar lipit de consolă. La peste 10–20 cm de PS5 nu mai trimitea comenzile și se deconecta.</p>
+          <p class="case__fix"><strong>Cauza:</strong> În timpul înlocuirii joystick-urilor fuseseră rupte câteva condensatoare din zona de semnal — de aceea conexiunea Bluetooth „murea” la distanță.</p>
+          <p class="case__result"><strong>Soluția:</strong> Am refăcut traseul lipind o punte directă de fludor (practic o punte de 0 Ω) peste zona afectată. Rezultatul: controllerul se conectează și funcționează perfect de la distanță, ca înainte.</p>
+          <a href="https://wa.me/40750201768?text=Bun%C4%83!%20Am%20o%20problem%C4%83%20cu%20controllerul%20meu%20PS5%20%28alta%20decat%20drift%29.%20" target="_blank" rel="noopener" class="btn btn--ghost case__cta">Ai o problemă similară? Scrie-ne</a>
         </div>
       </article>
-      <p class="muted center">Secțiune pregătită pentru conținutul real — pune pozele „înainte/după” și povestea reparației.</p>
     </div>
   </section>
 
@@ -457,6 +461,6 @@
     <span class="wab__label">Comandă reparație</span>
   </a>
 
-  <script src="js/main.js?v=6"></script>
+  <script src="js/main.js?v=7"></script>
 </body>
 </html>
