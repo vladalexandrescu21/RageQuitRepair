@@ -329,6 +329,25 @@ ul, ol { list-style: none; padding: 0; }
 .case__body strong { color: var(--text); }
 .case + .muted { margin-top: 16px; }
 
+/* ===================== GALERIE ===================== */
+.gallery { columns: 2; column-gap: 14px; }
+.gallery__item {
+  display: block; position: relative; break-inside: avoid; margin-bottom: 14px;
+  border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+}
+.gallery__item img { width: 100%; display: block; transition: transform .4s ease; }
+.gallery__item:hover img { transform: scale(1.04); }
+.gallery__cap {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 20px 12px 10px;
+  font-family: var(--font-head); font-size: 0.78rem; color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.78), transparent);
+}
+@media (min-width: 820px) {
+  .gallery { columns: 3; column-gap: 16px; }
+  .gallery__item { margin-bottom: 16px; }
+}
+
 /* ===================== FAQ ===================== */
 .faq { display: grid; gap: 12px; }
 .faq__item {
