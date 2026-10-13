@@ -53,6 +53,7 @@ const CONFIG = {
     // Mesajele care se rotesc (HTML controlat de noi — fără input de la user)
     const messages = [
       `<span class="g">${gtaPhrase}</span> — și drift-ul nu o să te lase să te bucuri de Vice City.`,
+      `Ți-ai făcut o echipă decentă în <span class="g">EA FC 27</span>… dar drift-ul îți pierde meciurile în Weekend League?`,
       `Abia ai început <span class="g">Witcher 3 Remastered</span>… și deja l-ai amețit pe Geralt?`,
       `Îl reparăm <span class="g">definitiv</span>: module TMR, fără drift, pentru totdeauna.`,
     ];
